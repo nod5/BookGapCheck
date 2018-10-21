@@ -34,7 +34,7 @@ Output is saved to same folder as BookCrop (default) or a custom folder set on t
 ![Alt text](images/BookGapCheck5.jpg?raw=true)
 
 ## FAQ
-**Q**  Why only *likely* no gap? 
+**Q**  Why only *likely* no gap?  
 **A**  Any ten images in the set could have both a gap (two missing pages) and duplicates (two pages doubled). That isn't noticeable on the BookGapCheck grid image.  
 
 ## Feedback  
