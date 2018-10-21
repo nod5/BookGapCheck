@@ -10,7 +10,7 @@ info =
 Quickly check if there are gaps or duplicates 
 in a set of book page scan images.
 
-version 2018-10-12
+version 2018-10-21
 by Nod5
 Free Software GPLv3
 AutoHotkey
@@ -32,7 +32,7 @@ gridimage_20181004174937.jpg
 
 )
 
-xwintitle = BookGapCheck
+wintitle = BookGapCheck
 DetectHiddenWindows, On
 guinum := 5
 
@@ -57,7 +57,7 @@ if A_IsCompiled
 Gui,6: Add, Text,x56 y130,Drop book page image
 Gui,6: Add, Button, x130, Crop
 GuiControl,6: Disable, Button2
-Gui,6: Show,h360 w300 y200,%xwintitle%
+Gui,6: Show,h360 w300 y200,%wintitle%
 return
 
 helpwindow:
@@ -68,11 +68,11 @@ IfWinExist
   return
 }
 ;get pos for main gui (preview or empty)
-WinGetPos,mainx,mainy, mainw,, %xwintitle% ahk_class AutoHotkeyGUI
+WinGetPos,mainx,mainy, mainw,, %wintitle% ahk_class AutoHotkeyGUI
 ;make helpwin
 Gui, 7: +ToolWindow -SysMenu -Caption -resize +AlwaysOnTop +0x800000 -DPIScale
 Gui, 7: Font, bold s12
-Gui, 7: Add, Text,, %xwintitle%
+Gui, 7: Add, Text,, %wintitle%
 Gui, 7: Font, normal s10
 Gui, 7: Add, Text,, %info%
 
@@ -80,7 +80,7 @@ Gui, 7: Add, Text,h1, %space%
 Gui, 7: Add, Text,yp-15 vtext_var, Custom output folder:
 Gui, 7: Add, Edit, yp+20 w260 r1 vedit gedit, % output_folder ? output_folder : ""
 Gui, 7: Font, cblue
-Gui, 7: Add, Text,yp+45 xm gwebsite, github.com/nod5/%xwintitle%
+Gui, 7: Add, Text,yp+45 xm gwebsite, github.com/nod5/%wintitle%
 ;show helpwin to the right of main gui
 Gui, 7: show, % "x" mainx+mainw " y" mainy
 ;move focus from editbox
@@ -88,7 +88,7 @@ GuiControl, 7: Focus, text_var
 return
 
 website:
-Run https://github.com/nod5/%xwintitle%
+Run https://github.com/nod5/%wintitle%
 return
 
 7GuiEscape:
@@ -105,7 +105,7 @@ IniWrite, % output_folder, %A_ScriptFullPath%.ini ,options, output_folder
 FileEncoding, UTF-8
 return
 
-#If WinActive(xwintitle " ahk_class AutoHotkeyGUI")
+#If WinActive(wintitle " ahk_class AutoHotkeyGUI")
 Tab:: goto helpwindow
 #If
 return
@@ -137,12 +137,12 @@ if !file
 ;get image source dimensions and calculate gui pic dimensions (ByRef)
 getdim(file, prop, pic_w, pic_h, imgw, imgh)
 ;create/show new preview pic window
-makegui(file, pic_h, pic_w, xwintitle, 5, %guinum%MainhWnd)
+makegui(file, pic_h, pic_w, wintitle, 5, %guinum%MainhWnd)
 gui, 6: destroy
 return
 
 
-#If WinActive(xwintitle " ahk_class AutoHotkeyGUI")
+#If WinActive(wintitle " ahk_class AutoHotkeyGUI")
 
 ;mouse click on pic
 ~*LButton::
@@ -210,9 +210,9 @@ block_crop := 0
 
 ;get vars for transform from screen relative to pic relative x/y
 ;pic control x/y/w/h relative to gui window top left
-ControlGetPos, xpic, ypic,wpic,hpic, Static1, %xwintitle% --
+ControlGetPos, xpic, ypic,wpic,hpic, Static1, %wintitle% --
 ;gui x/y/w/h relative to screen
-WinGetPos, xwin, ywin, wwin, hwin, %xwintitle% --
+WinGetPos, xwin, ywin, wwin, hwin, %wintitle% --
 ;pic edges relative to screen
 edgex1 := xwin   + xpic  ;pic  left edge relative to screen
 edgey1 := ywin   + ypic  ;pic   top edge
@@ -339,16 +339,15 @@ Loop, Files, % folder "\bookgapcheck_*." ext
 tooltip, `n`n saving ... `n `n `n
 
 ;save grid image
+if !InStr(FileExist(output_folder), "D")
+  output_folder := A_ScriptDir
 gridimage := output_folder "\gridimage_" A_Now "." ext
 WIA_SaveImage(bigimgObj, gridimage)
 
 ;show grid image
-While !FileExist(gridimage)
-{
-if (A_Index = 20)
-  break
-sleep 200
-}
+Loop, 40
+  sleep 200
+Until FileExist(gridimage)
 
 if FileExist(gridimage)
   Run % gridimage
@@ -391,7 +390,6 @@ getdim(xdimfile, ByRef prop, ByRef pic_w, ByRef pic_h, Byref imgw, Byref imgh) {
 makegui(picfile, pic_h, pic_w, title, guinum, ByRef MainhWnd) {
   hhh := pic_h + 80
   www := pic_w + 80
-  Gui, Margin, 40, 40
 
   ;outer parent window
   Gui,%guinum%: font, s8 cgray norm

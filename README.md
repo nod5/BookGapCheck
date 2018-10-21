@@ -1,6 +1,6 @@
-# BookGapCheck
+﻿# BookGapCheck
 
-BookGapCheck.ahk  -  version 2018-10-12  -  by Nod5  -  GPLv3  
+BookGapCheck.ahk  -  version 2018-10-21  -  by Nod5  -  GPLv3  
 
 Quickly check if there are gaps or duplicates in a set of book page scan images.  
 
@@ -21,10 +21,9 @@ Quickly check if there are gaps or duplicates in a set of book page scan images.
 If all grid image numbers increment by 10 then the set of scanned pages is likely complete. 
 Example: 10 20 30 40 ... 480 .  
 
-Output file format: gridimage_20181004174937.jpg  
+Output file format: `gridimage_20181004174937.jpg`  
 
-Output is saved to same folder as input image.  
-Custom output folder can be set on help screen.  
+Output is saved to same folder as BookCrop (default) or a custom folder set on the help screen.  
 
 ## Example: likely no gap or duplicate  
 
@@ -33,6 +32,10 @@ Custom output folder can be set on help screen.
 ## Example: gap
 
 ![Alt text](images/BookGapCheck5.jpg?raw=true)
+
+## FAQ
+**Q**  Why only *likely* no gap? 
+**A**  Any ten images in the set could have both a gap (two missing pages) and duplicates (two pages doubled). That isn't noticeable on the BookGapCheck grid image.  
 
 ## Feedback  
 GitHub , https://github.com/nod5/BookGapCheck  
