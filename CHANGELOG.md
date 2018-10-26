@@ -1,7 +1,11 @@
-﻿# Change Log  
+# Change Log  
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
+
+## [2018-10-26] - 2018-10-26
+### Changed
+- Readme describes command line input
 
 ## [2018-10-21] - 2018-10-21
 ### Fixed
