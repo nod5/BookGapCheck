@@ -1,4 +1,4 @@
-﻿#NoEnv
+#NoEnv
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 SetBatchLines, -1
@@ -10,7 +10,7 @@ info =
 Quickly check if there are gaps or duplicates 
 in a set of book page scan images.
 
-version 2018-10-21
+version 2018-10-26
 by Nod5
 Free Software GPLv3
 AutoHotkey
@@ -26,6 +26,9 @@ HOW TO USE
 If all grid image numbers increment by 10 then
 the set of scanned pages is likely complete.
 Example: 10 20 30 40 ... 480
+
+Input image via command line:
+BookGapCheck.exe "C:\folder\0001.jpg"
 
 Output file format: 
 gridimage_20181004174937.jpg
@@ -95,11 +98,11 @@ return
 gui,7: destroy
 return
 
-;change to helpwin custom output folder edit
+;helpwin editbox to change custom output folder
 edit:
 Gui, Submit, NoHide
 FileEncoding, UTF-16
-;if box string is a folder then use it, else use the script's folder
+;if box string matches existing folder then keep it, else use the script's folder
 output_folder := InStr(FileExist(edit_box), "D") ? edit_box : ""
 IniWrite, % output_folder, %A_ScriptFullPath%.ini ,options, output_folder
 FileEncoding, UTF-8
@@ -159,9 +162,8 @@ return
 5GuiEscape:
 25GuiEscape:
 cancel_rectangle:
-Loop 12
-  if a_index in 1,2,3,4 ;rectt gui
-    Gui, %A_Index%: destroy
+Loop 4
+  Gui, %A_Index%: destroy
 
 ;prevent crop
 block_crop := 1
@@ -180,10 +182,7 @@ If InStr ( GetKeyState("Lbutton", "P") , "D" )
   goto cancel_rectangle
 
 next := prev := ""
-if (InStr(a_thislabel, "Up") )
-  prev := 1
-else
-  next := 1
+InStr(a_thislabel, "Up") ? prev := 1 : next := 1
 
 Loop, Files, % folder "\*." ext
 {
@@ -208,7 +207,7 @@ pic:
 gui,7: destroy
 block_crop := 0
 
-;get vars for transform from screen relative to pic relative x/y
+;get vars for transform from screen relative x/y to pic relative x/y
 ;pic control x/y/w/h relative to gui window top left
 ControlGetPos, xpic, ypic,wpic,hpic, Static1, %wintitle% --
 ;gui x/y/w/h relative to screen
@@ -225,11 +224,11 @@ edgey2 := edgey1 + hpic  ;pic   low edge
 LetUserSelectRect(screenx1, screeny1, screenx2, screeny2)
 
 ;cancel if no rectangle was made
-if (screenx1 == screenx2 or screeny1 == screeny2)
+if (screenx1 = screenx2 or screeny1 = screeny2)
   return
 
 ;cancel if rclick or other hotkey was pressed
-if (block_crop == 1)
+if (block_crop = 1)
   return
 
 ;rect corners relative to pic top left
@@ -440,7 +439,7 @@ LetUserSelectRect(ByRef x1, ByRef y1, ByRef x2, ByRef y2)
     Gui, %A_Index%: Color, %xcol%
   }
 
-  if GetKeyState("Lbutton", "P") == "U"
+  if (GetKeyState("Lbutton", "P") = "U")
     return ;user already released button (quick click)
 
   MouseGetPos, xo, yo             ;first click position
