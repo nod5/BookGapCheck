@@ -23,9 +23,10 @@ Example: 10 20 30 40 ... 480 .
 
 Output file format: `gridimage_20181004174937.jpg`  
 
-Output is saved to same folder as BookCrop (default) or a custom folder set on the help screen.  
+Output is saved to same folder as BookGapCheck (default) or a custom folder set on the help screen.  
 
-Input image via command line: `BookGapCheck.exe "C:\folder\0001.jpg"`  
+Input image via command line:  
+`BookGapCheck.exe "C:\folder\0001.jpg"`  
 
 ## Example: likely no gap or duplicate  
 
